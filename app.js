@@ -105,7 +105,6 @@ audio.addEventListener('pause', () => {
     navigator.mediaSession.playbackState = 'paused';
   }
 });
-
   document.getElementById('add-files').addEventListener('click', () => {
     document.getElementById('file-input').click();
   });
@@ -250,6 +249,41 @@ async function loadSong(index) {
 
   if (audioContext.state === 'suspended') audioContext.resume();
   audio.play();
+   // ADD THIS BLOCK - Media Session for lock screen controls
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: song.title,
+      artist: song.artist,
+      album: 'JMF Player',
+      artwork: [
+        { 
+          src: song.cover || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22512%22 height=%22512%22%3E%3Crect fill=%22%238B5CF6%22 width=%22512%22 height=%22512%22/%3E%3C/svg%3E', 
+          sizes: '512x512', 
+          type: 'image/svg+xml' 
+        }
+      ]
+    });
+
+    // Hook up the hardware/OS buttons
+    navigator.mediaSession.setActionHandler('play', () => {
+      audio.play();
+    });
+    navigator.mediaSession.setActionHandler('pause', () => {
+      audio.pause();
+    });
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      prevSong();
+    });
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      nextSong();
+    });
+    navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+      audio.currentTime = Math.max(audio.currentTime - (details.seekOffset || 10), 0);
+    });
+    navigator.mediaSession.setActionHandler('seekforward', (details) => {
+      audio.currentTime = Math.min(audio.currentTime + (details.seekOffset || 10), audio.duration);
+    });
+  }
 }
 
 function prevSong() {
