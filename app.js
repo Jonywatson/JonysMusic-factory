@@ -92,13 +92,19 @@ function setupEventListeners() {
   audio.addEventListener('timeupdate', updateProgress);
   audio.addEventListener('ended', handleSongEnd);
   audio.addEventListener('play', () => {
-    document.getElementById('cover').classList.add('playing');
-    document.getElementById('play').textContent = '⏸';
-  });
-  audio.addEventListener('pause', () => {
-    document.getElementById('cover').classList.remove('playing');
-    document.getElementById('play').textContent = '▶';
-  });
+  document.getElementById('cover').classList.add('playing');
+  document.getElementById('play').textContent = '⏸';
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = 'playing';
+  }
+});
+audio.addEventListener('pause', () => {
+  document.getElementById('cover').classList.remove('playing');
+  document.getElementById('play').textContent = '▶';
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = 'paused';
+  }
+});
 
   document.getElementById('add-files').addEventListener('click', () => {
     document.getElementById('file-input').click();
