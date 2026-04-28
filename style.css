@@ -511,9 +511,9 @@ body {
 .controls {
   display: flex;
   align-items: center;
-  justify-content: center; /* CHANGED - was space-between */
-  gap: 8px;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px; /* more breathing room now */
+  flex-wrap: nowrap; /* CHANGED - no wrap needed anymore */
 }
 
 .controls button {
@@ -558,38 +558,13 @@ body {
   background: #7C3AED;
 }
 
-.vu-meter {
-  display: flex;
-  gap: 2px;
-  height: 20px;
-  align-items: flex-end;
-  flex-shrink: 0;
-}
-
-.vu-led {
-  width: 4px;
-  background: #1E293B;
-  border-radius: 2px;
-  transition: background 0.1s;
-}
-
-.vu-led.active {
-  background: #10B981;
-}
-
-.vu-led[data-level="7"].active,
-.vu-led[data-level="8"].active {
-  background: #EF4444;
-}
-
 .volume-wrap {
   display: flex;
   align-items: center;
-  gap: 12px;
-  flex-basis: 100%; /* CHANGED - was width: 100% */
-  min-width: 100%; /* ADDED - forces wrap on Android */
-  padding: 8px 4px 4px 4px; /* CHANGED - more top padding */
-  margin-top: 4px; /* ADDED - spacing from buttons */
+  gap: 8px;
+  flex: 1; /* ADDED - takes remaining space */
+  max-width: 200px; /* ADDED - don't let it get too huge */
+  min-width: 120px; /* ADDED - keeps it usable */
 }
 
 .volume-wrap span {
@@ -630,10 +605,6 @@ body {
 
 /* Desktop: volume inline with buttons */
 @media (min-width: 768px) {
-  .controls {
-    flex-wrap: nowrap;
-    justify-content: space-between; /* RESTORE for desktop only */
-  }
   .volume-wrap {
     flex-basis: auto; /* RESET for desktop */
     min-width: 0; /* RESET for desktop */
@@ -647,9 +618,6 @@ body {
 
 /* Mobile: hide VU meter, shrink buttons slightly */
 @media (max-width: 767px) {
-  .vu-meter {
-    display: none;
-  }
   .controls button {
     font-size: 20px;
     width: 40px;
@@ -661,4 +629,3 @@ body {
     height: 48px;
   }
 }
-
