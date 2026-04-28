@@ -443,8 +443,6 @@ async function drawWaveform(file) {
 }
 
 function draw() {
-  animationId = requestAnimationFrame(draw);
-  analyser.getByteFrequencyData(dataArray);
 
   ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
 
