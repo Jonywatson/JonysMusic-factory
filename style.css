@@ -511,7 +511,7 @@ body {
 .controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center; /* CHANGED - was space-between */
   gap: 8px;
   flex-wrap: wrap;
 }
@@ -586,9 +586,10 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 100%;
-  order: 10;
-  padding: 4px 0;
+  flex-basis: 100%; /* CHANGED - was width: 100% */
+  min-width: 100%; /* ADDED - forces wrap on Android */
+  padding: 8px 4px 4px 4px; /* CHANGED - more top padding */
+  margin-top: 4px; /* ADDED - spacing from buttons */
 }
 
 .volume-wrap span {
@@ -631,12 +632,16 @@ body {
 @media (min-width: 768px) {
   .controls {
     flex-wrap: nowrap;
+    justify-content: space-between; /* RESTORE for desktop only */
   }
   .volume-wrap {
-    width: auto;
+    flex-basis: auto; /* RESET for desktop */
+    min-width: 0; /* RESET for desktop */
     max-width: 180px;
     order: 0;
     margin-left: auto;
+    margin-top: 0;
+    padding: 4px 0;
   }
 }
 
@@ -656,3 +661,4 @@ body {
     height: 48px;
   }
 }
+
