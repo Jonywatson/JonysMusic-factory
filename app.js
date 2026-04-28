@@ -17,6 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function init() {
   audio = document.getElementById('audio');
+  // ADD THESE 5 LINES RIGHT HERE
+  const savedVol = localStorage.getItem('jmf_volume');
+  if (savedVol !== null) {
+    audio.volume = savedVol;
+    document.getElementById('volume').value = savedVol;
+  }
+  
   canvas = document.getElementById('visualizer');
   ctx = canvas.getContext('2d');
   waveformCanvas = document.getElementById('waveform');
@@ -74,9 +81,17 @@ function setupEventListeners() {
   document.getElementById('eq-close').addEventListener('click', toggleEQ);
   document.getElementById('eq-reset').addEventListener('click', resetEQ);
 
+  // REPLACE YOUR OLD document.getElementById('volume') LISTENER WITH THIS
   document.getElementById('volume').addEventListener('input', (e) => {
     audio.volume = e.target.value;
+    localStorage.setItem('jmf_volume', e.target.value);
+    
+    const icon = document.querySelector('.volume-wrap span');
+    if (e.target.value == 0) icon.textContent = '🔇';
+    else if (e.target.value < 0.5) icon.textContent = '🔉';
+    else icon.textContent = '🔊';
   });
+
 
   document.getElementById('seek').addEventListener('input', (e) => {
     const percent = e.target.value / 100;
@@ -90,7 +105,24 @@ function setupEventListeners() {
   });
 
   audio.addEventListener('timeupdate', updateProgress);
-  audio.addEventListener('ended', handleSongEnd);
+  audio.addEventListener('ended', () => {
+    if (isRepeating) {
+      audio.currentTime = 0;
+      audio.play();
+    } else if (currentSongIndex < songs.length - 1) {
+      nextSong();
+    } else {
+      currentSongIndex = 0;
+      loadSong(0);
+      audio.pause();
+      document.getElementById('play').textContent = '▶';
+      
+      if ('mediaSession' in navigator) {
+        navigator.mediaSession.playbackState = 'none';
+      }
+    }
+  });
+  
   audio.addEventListener('play', () => {
   document.getElementById('cover').classList.add('playing');
   document.getElementById('play').textContent = '⏸';
@@ -288,17 +320,32 @@ async function loadSong(index) {
 
 function prevSong() {
   if (playlist.length === 0) return;
-  const newIndex = currentIndex <= 0? playlist.length - 1 : currentIndex - 1;
+  
+  const newIndex = currentIndex <= 0 ? playlist.length - 1 : currentIndex - 1;
   loadSong(newIndex);
+  
+  // ADD THESE 4 LINES
+  audio.play().catch(err => console.log('Autoplay blocked:', err));
+  
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = 'playing';
+  }
 }
-
 function nextSong() {
   if (playlist.length === 0) return;
+  
   if (isShuffle) {
     loadSong(Math.floor(Math.random() * playlist.length));
   } else {
-    const newIndex = currentIndex >= playlist.length - 1? 0 : currentIndex + 1;
+    const newIndex = currentIndex >= playlist.length - 1 ? 0 : currentIndex + 1;
     loadSong(newIndex);
+  }
+  
+  // ADD THESE 4 LINES
+  audio.play().catch(err => console.log('Autoplay blocked:', err));
+  
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = 'playing';
   }
 }
 
