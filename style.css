@@ -324,13 +324,17 @@ body {
 .controls button {
   background: none;
   border: none;
-  color: var(--text);
-  font-size: 1.4rem;
+  font-size: 24px;
+  padding: 8px;
+  color: #E2E8F0;
+  cursor: pointer;
+  flex-shrink: 0;
   width: 44px;
   height: 44px;
-  position: relative;
-  cursor: pointer;
-  transition: transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .controls button:active {
@@ -445,4 +449,210 @@ body {
   color: var(--text);
   border-radius: 8px;
   cursor: pointer;
+}
+
+/* PASTE THIS AT THE BOTTOM OF style.css */
+/* Player Bar - Fixed Bottom */
+.player-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  font-size: 12px;
+  color: #94A3B8;
+}
+
+.seek-container {
+  position: relative;
+  flex: 1;
+  height: 40px;
+}
+
+#waveform {
+  width: 100%;
+  height: 40px;
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+#seek {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  margin: 0;
+  cursor: pointer;
+}
+
+#current-time, #duration {
+  min-width: 40px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  padding: 8px;
+  color: #E2E8F0;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.controls button:hover {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+.controls button:active {
+  transform: scale(0.95);
+}
+
+.controls button.active {
+  color: #8B5CF6;
+}
+
+/* Play button - bigger and highlighted */
+#play {
+  font-size: 32px;
+  width: 52px;
+  height: 52px;
+  background: #8B5CF6;
+  color: #fff;
+}
+
+#play:hover {
+  background: #7C3AED;
+}
+
+.vu-meter {
+  display: flex;
+  gap: 2px;
+  height: 20px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.vu-led {
+  width: 4px;
+  background: #1E293B;
+  border-radius: 2px;
+  transition: background 0.1s;
+}
+
+.vu-led.active {
+  background: #10B981;
+}
+
+.vu-led[data-level="7"].active,
+.vu-led[data-level="8"].active {
+  background: #EF4444;
+}
+
+.volume-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  order: 10;
+  padding: 4px 0;
+}
+
+.volume-wrap span {
+  font-size: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+#volume {
+  flex: 1;
+  height: 8px;
+  -webkit-appearance: none;
+  background: rgba(139, 92, 246, 0.3);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+#volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #8B5CF6;
+  cursor: pointer;
+  border: 2px solid #fff;
+  margin-top: -8px;
+}
+
+#volume::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #8B5CF6;
+  cursor: pointer;
+  border: 2px solid #fff;
+}
+
+/* Desktop: volume inline with buttons */
+@media (min-width: 768px) {
+  .controls {
+    flex-wrap: nowrap;
+  }
+  .volume-wrap {
+    width: auto;
+    max-width: 180px;
+    order: 0;
+    margin-left: auto;
+  }
+}
+
+/* Mobile: hide VU meter, shrink buttons slightly */
+@media (max-width: 767px) {
+  .vu-meter {
+    display: none;
+  }
+  .controls button {
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+  }
+  #play {
+    font-size: 28px;
+    width: 48px;
+    height: 48px;
+  }
 }
